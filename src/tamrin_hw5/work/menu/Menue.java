@@ -1,4 +1,5 @@
 package tamrin_hw5.work.menu;
+
 import tamrin_hw5.jdbc.Article;
 import tamrin_hw5.jdbc.User;
 import tamrin_hw5.work.UserWork;
@@ -17,7 +18,8 @@ public class Menue {
     private List<Article> articleList, articleList1;
     private WorkArticle workArticle = new WorkArticle();
     private Article article = new Article();
-    void runMenue() throws SQLException {
+
+    public void runMenue() throws SQLException {
         exite = "yes";
         printHeader();
         while (exite.equals("yes")) {
@@ -26,10 +28,11 @@ public class Menue {
             int choise = scanner.nextInt();
             performACtion(choise);
             System.out.println(" if are you continue enter yes else  enter no ");
+            exite = scanner.next();
             exite = "yes";
-
         }
     }
+
     private void performACtion(int choise) throws SQLException {
         switch (choise) {
             case 1: {
@@ -54,13 +57,15 @@ public class Menue {
                 break;
         }
     }
+
     private void vierwallArticle() throws SQLException {
         articleList = workArticle.view();
-        int i = 0;
-        for (Article article : articleList) {
-            System.out.println(articleList.get(i).toString());
+
+        for (int i = 0; i < articleList.size(); i++) {
+            System.out.println(articleList.get(i).toString1());
         }
     }
+
     private void userRigester() throws SQLException {
         System.out.println("you are entering ");
         System.out.println(" if are you change password please yes ");
@@ -69,12 +74,14 @@ public class Menue {
             System.out.println("enter  new password");
             String newpassword = scanner.next();
             userWork.change_password(user.getId(), newpassword);
+            System.out.println("change your password");
         } else {
             System.out.println(" view article");
             menueArticle();
         }
         menueArticle();
     }
+
     private void newUser() throws SQLException {
         System.out.println("register");
         System.out.println("please enter your  information ");
@@ -86,23 +93,30 @@ public class Menue {
         int nationalCode = scanner.nextInt();
         System.out.println("enter natinalCode as password ");
         String password1 = scanner.next();
-        Date date = new java.sql.Date(2000, 12, 01);
+        String year = scanner.nextLine();
+        String month = scanner.nextLine();
+        String day = scanner.nextLine();
+        Date date = Date.valueOf((year+"-"+ month+"-"+ day));
         User user = new User(id, user_name, nationalCode, password1, date);
         userWork.register_user(user);
     }
 
-    void printHeader() {
+    private void printHeader() {
         System.out.println(" ------------------------------------");
         System.out.println("|            welcome to out         |");
         System.out.println("|            menue Application      |");
         System.out.println(" -------------------------------------");
     }
-    void printMenue() {
-        System.out.println(" please  make a select");
-        System.out.println("1 -> enter  ");
-        System.out.println("2 -> registri ");
-        System.out.println("3 ->  view article ");
+
+    private void printMenue() {
+        System.out.println("-----------------------------------------");
+        System.out.println("|         please  make a select          |");
+        System.out.println("|          1 -> enter                    |");
+        System.out.println("|          2 -> registri                 |");
+        System.out.println("|          3 ->  view article            |");
+        System.out.println("-----------------------------------------");
     }
+
     public void printMenueArticle() {
         System.out.println("-----------------------------------");
         System.out.println("|        1- View articles          |");
@@ -110,6 +124,7 @@ public class Menue {
         System.out.println("|        3- Enter new article      |");
         System.out.println("------------------------------------");
     }
+
     public void menueArticle() throws SQLException {
         int choise;
         exite = "yes";
@@ -122,6 +137,7 @@ public class Menue {
             exite = scanner.next();
         }
     }
+
     public void performArticle(int choise) throws SQLException {
         switch (choise) {
             case 1: {
@@ -145,29 +161,37 @@ public class Menue {
 
         }
     }
+
     private void viewArticle() throws SQLException {
-        System.out.println("please enter content article");
-        String content = scanner.next();
-        articleList1 = workArticle.completView(content);
-        int i = 0;
-        for (int j = 0; j < articleList1.size() - 1; j++) {
+        System.out.println("please enter your id article");
+        int id_user = scanner.nextInt();
+        articleList1 = workArticle.completView(id_user);
+        for (int j = 0; j < articleList1.size(); j++) {
             System.out.println(articleList1.get(j).toString());
 
         }
     }
+
     private Article newArticle() {
-        System.out.println("please enter title your article:");
+        System.out.println("please enter title your article");
+        String s = scanner.nextLine();
         String title = scanner.nextLine();
-        System.out.println("please rnter content your article:");
+        System.out.println("please rnter content your article");
         String content = scanner.nextLine();
         System.out.println(" enter user_id article");
-        int user_id = scanner.nextInt();
-        System.out.println(" enter brief article");
+        int user_id = Integer.valueOf(scanner.nextLine());
+        System.out.println(" enter brief article:");
         String brief = scanner.nextLine();
         System.out.println("enter id your article");
-        int id = scanner.nextInt();
-        Date date = new Date(2000, 11, 01);
-        Article article1 = new Article(id, title, brief, content, date, user_id);
+        int id = Integer.valueOf(scanner.nextLine());
+        System.out.println("enter date ispublish year, month,day");
+        String year = scanner.nextLine();
+        String month = scanner.nextLine();
+        String day = scanner.nextLine();
+        Date date = Date.valueOf((year+"-"+ month+"-"+ day));
+        System.out.println(" enter are you publish your article to 1 else to 0");
+        boolean isPublish = Boolean.valueOf(scanner.nextLine());
+        Article article1 = new Article(id, title, brief, content, date, isPublish, user_id);
         return article1;
     }
 }
